@@ -1,0 +1,30 @@
+cmake_minimum_required(VERSION 3.8)
+
+enable_language(CXX)
+
+if (${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+    set(PLATFORM_WIN 1)
+    set(PLATFORM_NAME "windows")
+elseif (${CMAKE_SYSTEM_NAME} STREQUAL "Xenon")
+    set(PLATFORM_XENON 1)
+    set(PLATFORM_NAME "xenon")
+    include("cmake/scripts/xenon-utils.cmake")
+    include("CMake/toolchain/xenon-toolchain.cmake")
+endif()
+
+if(${CMAKE_SIZEOF_VOID_P} EQUAL 8)
+	set(PLATFORM_X64 true)
+	set(PLATFORM_ARCH "x64")
+	set(ARCH_PREFIX "-${PLATFORM_ARCH}")
+else()
+	set(PLATFORM_X64 false)
+	set(PLATFORM_ARCH "x86")
+	set(ARCH_PREFIX "-${PLATFORM_ARCH}")
+endif()
+
+set(BINARY_OUTPUT_DIR ${PROJECT_SOURCE_DIR}/binaries/${PLATFORM_NAME}${ARCH_PREFIX})
+set(LIBRARY_OUTPUT_DIR ${PROJECT_SOURCE_DIR}/lib/${PLATFORM_NAME}${ARCH_PREFIX})
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BINARY_OUTPUT_DIR}/${CMAKE_BUILD_TYPE}/)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${BINARY_OUTPUT_DIR}/${CMAKE_BUILD_TYPE}/)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${BINARY_OUTPUT_DIR}/${CMAKE_BUILD_TYPE}/)
